@@ -6,7 +6,7 @@ namespace App\InputData\DTO;
 
 use App\System\DTO\BasicDTO;
 
-class UserDTO extends BasicDTO
+class InputUserDataDTO extends BasicDTO
 {
     public int       $user_id;
     public \DateTime $created_at;
