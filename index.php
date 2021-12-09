@@ -17,9 +17,14 @@ try {
 
     $strategies_collection = $_file_service->getInputFileProcessingStrategiesCollection($input_file_names, $extension_to_strategy);
 
-    $_processing_service = new \App\Services\ProcessingService();
+    $_user_repo      = new \App\Repo\UserRepo();
+    $_user_data_repo = new \App\Repo\UserDataRepo($_user_repo);
+
+
+    $_processing_service = new \App\Services\ProcessingService($_user_repo, $_user_data_repo);
 
     $_processing_service->process($strategies_collection);
+    $_processing_service->calculate();
 
 
 

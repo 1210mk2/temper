@@ -5,11 +5,18 @@ namespace App\Services;
 
 
 use App\InputData\Strategies\InputFileInterface;
+use App\Repo\UserDataRepo;
+use App\Repo\UserRepo;
 
 class ProcessingService
 {
-    public function __construct()
+    private $_user_repo;
+    private $_user_data_repo;
+
+    public function __construct(UserRepo $_user_repo, UserDataRepo $_user_data_repo)
     {
+        $this->_user_repo      = $_user_repo;
+        $this->_user_data_repo = $_user_data_repo;
     }
 
     /**
@@ -21,11 +28,18 @@ class ProcessingService
 
             $strategy->open();
             $strategy->prepareDataForRead(new \App\InputData\ReaderSettings());
+
             $data = $strategy->getRowIterator();
             foreach ($data as $row) {
-                $item = \App\InputData\DTO\UserDTO::fromArray($row);
+                $input_user_data = \App\InputData\DTO\InputUserDataDTO::fromArray($row);
+                $this->_user_data_repo->save($input_user_data);
             }
         }
     }
 
+    public function calculate()
+    {
+        $ud_data = $this->_user_data_repo->getAll();
+        $u_data = $this->_user_repo->getAll();
+    }
 }
