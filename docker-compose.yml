@@ -1,0 +1,34 @@
+version: "3.3"
+
+services:
+  nginx:
+    container_name: tmpr-nginx
+    build:
+      context: .
+      dockerfile: docker/nginx.Dockerfile
+    ports:
+      - 8098:80
+    depends_on:
+      - fpm
+    volumes:
+      - ./:/var/www/tmpr-docker
+    networks:
+      - frontend
+      - backend
+
+  fpm:
+    container_name: tmpr-fpm
+    build:
+      context: .
+      dockerfile: docker/fpm.Dockerfile
+    extra_hosts:
+      host.docker.internal: host-gateway
+    volumes:
+      - ./:/var/www/tmpr-docker
+    networks:
+      - backend
+
+networks:
+  frontend:
+    name: proxy_proxy
+  backend:
