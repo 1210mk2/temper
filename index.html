@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Temper</title>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+</head>
+
+<body>
+
+<form id="getdataform" action="index.php" method="get">
+    <button type="submit">Get data</button>
+</form>
+
+<figure class="highcharts-figure">
+    <div id="container"></div>
+    <p class="highcharts-description">
+        Chart showing how different series types can be combined in a single
+        chart. The chart is using a set of column series, overlaid by a line and
+        a pie series.
+    </p>
+</figure>
+
+<script>
+
+    document.getElementById('getdataform').addEventListener('submit', function(e){
+        e.preventDefault();
+
+        fetch("index.php",
+            {
+                method: "GET",
+                headers:{"content-type":"application/x-www-form-urlencoded"}
+            })
+
+            .then( response => {
+                let json = response.json()
+                if (response.status !== 200) {
+                    json.then(data => {
+                        alert(data.error)
+                    })
+                }
+                return json
+            })
+            .then(data => {
+                console.log('success')
+                console.log(data)
+
+                let series_array = []
+
+                const step_names_array = data.steps.map( step => step.name + ' (' + step.perc + '%)');
+                const step_data_object = data.data;
+                for (let week_number in step_data_object) {
+                    let week_object = step_data_object[week_number]
+
+                    relative_percentage = week_object.step_count.map( function(item, index, array) {
+                        return Math.floor(100 * item / array[0])
+                    })
+
+                    series_array.push(
+                        {
+                            type: 'column',
+                            name: 'week #' + week_number,
+                            data: relative_percentage
+                        }
+                    )
+                }
+
+                Highcharts.chart('container', {
+                    title: {
+                        text: 'Onboarding retention chart'
+                    },
+                    xAxis: {
+                        categories: step_names_array
+                    },
+                    series: series_array
+                });
+
+
+            })
+            .catch(data => {
+                console.log(data)
+            });
+
+    })
+
+</script>
+</body>
+</html>

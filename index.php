@@ -1,4 +1,6 @@
 <?php
+ini_set('display_errors','Off');
+
 require_once 'vendor/autoload.php';
 
 $ds = DIRECTORY_SEPARATOR;
@@ -70,6 +72,8 @@ try {
     ];
 
 } catch (Throwable $exception) {
+
+    http_response_code(422);
     $result = [
         "success"   => 0,
         "error"      => $exception->getMessage(),
