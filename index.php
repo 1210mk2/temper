@@ -7,7 +7,7 @@ $input_path     = "input"   . $ds;
 $extension_to_strategy = [
     "csv"   => \App\InputData\Strategies\Csv::class,
     "tsv"   => \App\InputData\Strategies\Tsv::class,
-//    "json"  => \App\InputData\Strategies\Json::class,
+    "json"  => \App\InputData\Strategies\Json::class,
 ];
 
 $steps = [
@@ -61,13 +61,19 @@ try {
 
     $_processing_service->process($strategies_collection);
 
-    $result = $_processing_service->calculate($ts_week_diff, $steps);
+    $data = $_processing_service->calculate($ts_week_diff, $steps);
 
+    $result = [
+        "success"   => 1,
+        "data"      => $data,
+        "steps"     => $steps,
+    ];
 
 } catch (Throwable $exception) {
-    echo "Errors\n";
-    echo $exception->getMessage();
-    die();
+    $result = [
+        "success"   => 0,
+        "error"      => $exception->getMessage(),
+    ];
 }
 
-echo "OK";
+echo json_encode($result);

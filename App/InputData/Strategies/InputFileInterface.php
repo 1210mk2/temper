@@ -5,6 +5,7 @@ namespace App\InputData\Strategies;
 
 
 use App\InputData\ReaderSettings;
+use App\System\DTO\BasicDTO;
 
 interface InputFileInterface
 {
@@ -15,4 +16,7 @@ interface InputFileInterface
     public function getData(): array;
 
     public function getRowIterator(): \Iterator;
+
+    public function getDTObyRow($row): BasicDTO;
+
 }

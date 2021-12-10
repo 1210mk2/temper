@@ -4,6 +4,8 @@
 namespace App\InputData\Strategies;
 
 
+use App\System\DTO\BasicDTO;
+
 abstract class InputFileCommon implements InputFileInterface
 {
     protected string $path;
@@ -22,4 +24,7 @@ abstract class InputFileCommon implements InputFileInterface
     abstract public function getData(): array;
 
     abstract public function getRowIterator(): \Iterator;
+
+    abstract public function getDTObyRow($row): BasicDTO;
+
 }

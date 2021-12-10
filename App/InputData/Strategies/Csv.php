@@ -4,7 +4,9 @@
 namespace App\InputData\Strategies;
 
 
+use App\InputData\DTO\InputUserDataDTO;
 use App\InputData\ReaderSettings;
+use App\System\DTO\BasicDTO;
 
 class Csv extends InputFileCommon
 {
@@ -40,5 +42,10 @@ class Csv extends InputFileCommon
         if ($settings->csv_skip_header) {
             $header_row_to_skip = $this->getRow();
         }
+    }
+
+    public function getDTObyRow($row): BasicDTO
+    {
+        return InputUserDataDTO::fromArray($row);
     }
 }

@@ -33,12 +33,17 @@ class ProcessingService
 
     private function calculateStepsToIncByPerc($percent)
     {
-        foreach ($this->getSteps() as $n => $step) {
-            if ($step->perc > $percent) {
-                return $n-1;
+        if ($percent < 0) {
+            return 0;
+        }
+        $steps = $this->getSteps();
+        $l = count($steps);
+        for ($n = 0; $n < $l; $n++) {
+            if ($percent < $steps[$n]->perc) {
+                return $n;
             }
         }
-        return $n;
+        return $l;
     }
     private function getStepsCountToIncByPerc($percent)
     {
@@ -58,14 +63,14 @@ class ProcessingService
 
             $data = $strategy->getRowIterator();
             foreach ($data as $row) {
-                $input_user_data = \App\InputData\DTO\InputUserDataDTO::fromArray($row);
+                $input_user_data = $strategy->getDTObyRow($row);
                 $this->_user_data_repo->save($input_user_data);
             }
         }
 
     }
 
-    private function getInititalPercentageBySteps()
+    private function getZeroCountBySteps()
     {
         return array_fill(0, count($this->getSteps()), 0);
     }
@@ -81,12 +86,16 @@ class ProcessingService
             $cohort_number = intdiv($item->i_timestamp, $ts_week_diff);
 
             $result[$cohort_number] = $result[$cohort_number] ?? (object)[
-                    "step_percentage" => $this->getInititalPercentageBySteps()
+                    "step_count"    => $this->getZeroCountBySteps(),
+//                    "cohort_count"  => 0,
                 ];
+
             $step_to_inc_count = $this->getStepsCountToIncByPerc($item->i_percent);
             for ($i = 0; $i < $step_to_inc_count; $i++) {
-                $result[$cohort_number]->step_percentage[$i]++;
+                $result[$cohort_number]->step_count[$i]++;
             }
+
+//            $result[$cohort_number]->cohort_count++; //will use first step
         }
 
         return $result;
