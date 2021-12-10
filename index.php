@@ -10,6 +10,42 @@ $extension_to_strategy = [
 //    "json"  => \App\InputData\Strategies\Json::class,
 ];
 
+$steps = [
+    (object)[
+        "name"  => "Create account",
+        "perc"  => 0,
+    ],
+    (object)[
+        "name"  => "Activate account",
+        "perc"  => 20,
+    ],
+    (object)[
+        "name"  => "Provide profile information",
+        "perc"  => 40,
+    ],
+    (object)[
+        "name"  => "What jobs are you interested in?",
+        "perc"  => 50,
+    ],
+    (object)[
+        "name"  => "Do you have relevant experience in these jobs?",
+        "perc"  => 70,
+    ],
+    (object)[
+        "name"  => "Are you a freelancer?",
+        "perc"  => 90,
+    ],
+    (object)[
+        "name"  => "Waiting for approval",
+        "perc"  => 99,
+    ],
+    (object)[
+        "name"  => "Approval",
+        "perc"  => 100,
+    ],
+];
+$ts_week_diff = 7 * 24 * 60 * 60;
+
 try {
     $_file_service = new \App\Services\FileService($input_path);
 
@@ -24,8 +60,8 @@ try {
     $_processing_service = new \App\Services\ProcessingService($_user_repo, $_user_data_repo);
 
     $_processing_service->process($strategies_collection);
-    $_processing_service->calculate();
 
+    $result = $_processing_service->calculate($ts_week_diff, $steps);
 
 
 } catch (Throwable $exception) {

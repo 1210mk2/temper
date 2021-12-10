@@ -12,6 +12,7 @@ class RepoUserDataDTO extends BasicDTO
 //    public int          $key;
     public int          $i_timestamp;
     public int          $i_user_id;
+    public int          $i_percent;
 
     public function __construct($obj)
     {

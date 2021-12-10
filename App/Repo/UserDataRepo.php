@@ -7,6 +7,7 @@ namespace App\Repo;
 use App\InputData\DTO\InputUserDataDTO;
 use App\Repo\DTO\RepoUserDTO;
 use App\Repo\DTO\RepoUserDataDTO;
+use Iterator;
 
 class UserDataRepo
 {
@@ -48,6 +49,16 @@ class UserDataRepo
         return $this->ai_keyed_storage;
     }
 
+    /**
+     * @return Iterator<int, RepoUserDataDTO>
+     */
+    public function getAllGenerator(): Iterator
+    {
+        foreach ($this->ai_keyed_storage as $item) {
+            yield $item;
+        }
+    }
+
     public function getByPrimaryKey(int $primary_key): ?RepoUserDataDTO
     {
         return $this->ai_keyed_storage[$primary_key] ?? null;
@@ -66,7 +77,7 @@ class UserDataRepo
         return $result;
     }
 
-    public function getByPrimaryKeysGenerator(array $primary_keys): \Iterator
+    public function getByPrimaryKeysGenerator(array $primary_keys): Iterator
     {
         foreach ($primary_keys as $primary_key) {
             $item = $this->getByPrimaryKey($primary_key);
@@ -89,7 +100,7 @@ class UserDataRepo
 
     }
 
-    public function getAllByUserGenerator(int $i_user): \Iterator
+    public function getAllByUserGenerator(int $i_user): Iterator
     {
         $primary_keys = $this->user_keyed_index[$i_user] ?? [];
         return $this->getByPrimaryKeysGenerator($primary_keys);
