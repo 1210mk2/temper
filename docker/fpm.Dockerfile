@@ -27,4 +27,4 @@ ADD /docker/config/php.ini /usr/local/etc/php/php.ini
 #    && echo xdebug.idekey=PHP_STORM >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
 #    && echo xdebug.remote_host=172.19.0.1 >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
-WORKDIR /var/www/rd-docker
+WORKDIR /var/www/tmpr-docker
